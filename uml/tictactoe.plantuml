@@ -1,0 +1,56 @@
+@startuml test 
+class TicTacToe
+class Player
+class Turn
+class Board
+class Token
+class Goal
+class X
+class O
+class Row
+class Column
+class MainDiagonal
+class InvertedDiagonal
+class Square
+class Coordinates
+class Action
+class Put
+class Move
+
+TicTacToe *-down-> "2" Player
+TicTacToe *-down-> Turn
+TicTacToe *-down-> Board
+TicTacToe o-down-> Action
+
+Turn -> Player 
+
+Player *-down-> "0...3" Token
+Player o-down-> Goal
+Player -> Board
+Player .down.> Action
+
+Goal <|-down- Row
+Goal <|-down- Column
+Goal <|-down- InvertedDiagonal
+Goal <|-down- MainDiagonal
+Goal .down.> Move
+Goal .down.> Put
+Goal .down.> Square
+
+Token <|-down- X
+Token <|-down- O
+
+Action <|-down- Put
+Action <|-down- Move
+Action .down.> Token
+
+Board *-down-> "3x3" Square
+
+Square *-down-> Coordinates
+
+
+
+
+
+
+@enduml
