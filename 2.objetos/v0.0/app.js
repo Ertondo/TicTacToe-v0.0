@@ -1,4 +1,4 @@
-const { Console } = require("../console");
+const { Console } = require("../../console");
 
 const console = new Console();
 
@@ -20,7 +20,9 @@ function playGame() {
     winner = isTicTacToe(game);
     if (!winner) nextTurn(game);
   } while (!winner);
-  console.writeln("Gano");
+
+  console.writeln(`Gano el token ${getToken(game)}`);
+  isResume();
 }
 
 function initGame() {
@@ -62,23 +64,75 @@ function showBoard(game) {
 }
 
 function placeToken(game) {
-  let coordinates = [];
+  console.writeln(`Turno de las ${getToken(game)}`);
+  let coordinates;
+
+  const movement = isMovement(game);
+  if (movement) {
+    do {
+      coordinates = readCoodinate("origen");
+      if (isEmpty(game)) {
+        console.writeln("No hay ficha en este lugar\n");
+      }
+    } while (isEmpty(game, coordinate));
+  }
+
   do {
-    console.writeln(`Turno de las ${getToken(game)}`);
-    coordinates[0] = console.readNumber("Fila: ");
-    coordinates[1] = console.readNumber("Columna: ");
-  } while (!placeIsFree(game, coordinates));
-  console.writeln("turno siguiente");
-  return game;
+    coordinates = readCoodinate("destino");
+    console.write(game.turn);
+    if (!isEmpty(game)) {
+      console.writeln("Elija una celda vacia\n");
+    }
+  } while (!isEmpty(game, coordinates));
+
+  if (movement) {
+    moveToken(game, coordinates);
+  } else {
+    putToken(game, coordinates);
+  }
+}
+
+function readCoodinate(title) {
+  return {
+    row: read("fila", title),
+    column: read("columna", title),
+  };
+
+  function read(coordinate, title) {
+    do {
+      num = console.readNumber(`\n${coordinate} ${title}: `);
+    } while (!isValidNumber(num));
+    return num - 1;
+  }
+}
+
+function isValidNumber(number) {
+  let error;
+  if (number < 1 || number > 3) {
+    console.write("Nro entre 1 y 3\n");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function isMovement(game) {
+  let empties = 0;
+
+  for (i = 0; i < game.MAX_TOKENS; i++) {
+    for (j = 0; j < game.MAX_TOKENS; j++) {
+      if (game.tokens[i][j] === game.TOKEN_EMPTY) {
+        empties++;
+      }
+    }
+  }
+  return empties < game.MAX_TOKENS ? true : false;
 }
 
 function isTicTacToe(game) {
-  return false;
-}
-
-function isResume() {
-  let resume = console.readString("Desea continuar?(S/N)");
-  return resume === "S" ? true : false;
+  return game.tokens[0][0] + game.tokens[1][1] + game.tokens[2][2] === "XXX"
+    ? true
+    : false;
 }
 
 function getToken(game) {
@@ -89,8 +143,21 @@ function nextTurn(game) {
   game.turn = (game.turn + 1) % game.MAX_PLAYERS;
 }
 
-function placeIsFree(game, coordinates) {
-  return game.tokens[coordinates[0]][coordinates[1]] === game.TOKEN_EMPTY
+function putToken(game, coordinates) {
+  game.tokens[coordinates.row][coordinates.column] = getToken(game);
+}
+
+function moveToken() {
+  console.write("mover");
+}
+
+function isEmpty(game, coordinates) {
+  return game.tokens[coordinate.row][coordinate.column] === game.TOKEN_EMPTY
     ? true
     : false;
+}
+
+function isResume() {
+  let resume = console.readString("Desea continuar?(S/N)");
+  return resume == "S" ? true : false;
 }
