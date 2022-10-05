@@ -65,55 +65,45 @@ function showBoard(game) {
 
 function placeToken(game) {
   console.writeln(`Turno de las ${getToken(game)}`);
-  let coordinates;
 
+  let origin;
+  let error;
   const movement = isMovement(game);
   if (movement) {
     do {
-      coordinates = readCoodinate("origen");
-      if (isEmpty(game)) {
-        console.writeln("No hay ficha en este lugar\n");
-      }
-    } while (isEmpty(game, coordinate));
+      origin = readCoodinate("origen", game.MAX_TOKENS);
+      error = isEmpty(game, origin, getToken(game));
+    } while (error);
   }
 
   do {
-    coordinates = readCoodinate("destino");
-    console.write(game.turn);
-    if (!isEmpty(game)) {
-      console.writeln("Elija una celda vacia\n");
-    }
-  } while (!isEmpty(game, coordinates));
+    target = readCoodinate("destino", game.MAX_TOKENS);
+    error = !isEmpty(game, target, getToken(game));
+  } while (error);
 
   if (movement) {
-    moveToken(game, coordinates);
-  } else {
-    putToken(game, coordinates);
+    putEmptyToken(game, origin);
   }
+
+  putToken(game, target, getToken(game));
 }
 
-function readCoodinate(title) {
+function readCoodinate(title, max) {
   return {
-    row: read("fila", title),
-    column: read("columna", title),
+    row: read(`Fila ${title}`, max),
+    column: read(`columna ${title}`, max),
   };
-
-  function read(coordinate, title) {
-    do {
-      num = console.readNumber(`\n${coordinate} ${title}: `);
-    } while (!isValidNumber(num));
-    return num - 1;
-  }
 }
 
-function isValidNumber(number) {
-  let error;
-  if (number < 1 || number > 3) {
-    console.write("Nro entre 1 y 3\n");
-    return false;
-  } else {
-    return true;
-  }
+function read(title, max) {
+  do {
+    position = console.readNumber(`\n${title}: `);
+    error = position < 1 || position > max;
+    if (error) {
+      console.writeln(`Solo numeros entre 1 y ${max}`);
+    }
+  } while (error);
+  return position - 1;
 }
 
 function isMovement(game) {
@@ -143,18 +133,16 @@ function nextTurn(game) {
   game.turn = (game.turn + 1) % game.MAX_PLAYERS;
 }
 
-function putToken(game, coordinates) {
-  game.tokens[coordinates.row][coordinates.column] = getToken(game);
+function putToken(game, { row, column }, token) {
+  game.tokens[row][column] = token;
+}
+
+function isEmpty(game, { row, column }) {
+  return (game.tokens[row][column] = game.TOKEN_EMPTY);
 }
 
 function moveToken() {
   console.write("mover");
-}
-
-function isEmpty(game, coordinates) {
-  return game.tokens[coordinate.row][coordinate.column] === game.TOKEN_EMPTY
-    ? true
-    : false;
 }
 
 function isResume() {
