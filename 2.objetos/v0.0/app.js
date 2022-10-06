@@ -18,11 +18,12 @@ function playGame() {
     showBoard(game);
     placeToken(game);
     winner = isTicTacToe(game);
+    console.writeln(winner);
     if (!winner) nextTurn(game);
   } while (!winner);
 
+  showBoard(game);
   console.writeln(`Gano el token ${getToken(game)}`);
-  isResume();
 }
 
 function initGame() {
@@ -73,12 +74,18 @@ function placeToken(game) {
     do {
       origin = readCoodinate("origen", game.MAX_TOKENS);
       error = isEmpty(game, origin, getToken(game));
+      if (error) {
+        console.writeln("La casilla esta vacia");
+      }
     } while (error);
   }
 
   do {
     target = readCoodinate("destino", game.MAX_TOKENS);
     error = !isEmpty(game, target, getToken(game));
+    if (error) {
+      console.writeln("La casilla no esta vacia");
+    }
   } while (error);
 
   if (movement) {
@@ -116,13 +123,11 @@ function isMovement(game) {
       }
     }
   }
-  return empties < game.MAX_TOKENS ? true : false;
+  return empties <= game.MAX_TOKENS ? true : false;
 }
 
 function isTicTacToe(game) {
-  return game.tokens[0][0] + game.tokens[1][1] + game.tokens[2][2] === "XXX"
-    ? true
-    : false;
+  return isTicTacToePerDiagonal(game) || isTicTacToePerLine(game);
 }
 
 function getToken(game) {
@@ -137,15 +142,58 @@ function putToken(game, { row, column }, token) {
   game.tokens[row][column] = token;
 }
 
-function isEmpty(game, { row, column }) {
-  return (game.tokens[row][column] = game.TOKEN_EMPTY);
+function putEmptyToken(game, { row, column }, token) {
+  game.tokens[row][column] = game.TOKEN_EMPTY;
 }
 
-function moveToken() {
-  console.write("mover");
+function isEmpty(game, { row, column }) {
+  return game.tokens[row][column] === game.TOKEN_EMPTY;
 }
 
 function isResume() {
   let resume = console.readString("Desea continuar?(S/N)");
   return resume == "S" ? true : false;
+}
+
+function isTicTacToePerDiagonal(game) {
+  let diagonal = "";
+  let diagonalInverted = "";
+  for (i = 0; i < 3; i++) {
+    for (j = 0; j < 3; j++) {
+      if (i === j) {
+        diagonal += game.tokens[i][j];
+      }
+      if (i + j === 2) {
+        diagonalInverted += game.tokens[i][j];
+      }
+    }
+  }
+  return (
+    diagonal === "XXX" ||
+    diagonal === "YYY" ||
+    diagonalInverted === "XXX" ||
+    diagonalInverted === "YYY"
+  );
+}
+
+function isTicTacToePerLine(game) {
+  let line = "";
+  let column = "";
+  for (i = 0; i < 3; i++) {
+    game.tokens[i].forEach((element) => {
+      line += element;
+    });
+    if (line === "XXX" || line === "YYY") {
+      return true;
+    }
+    line = "";
+    game.tokens.forEach((element) => {
+      column += element[i];
+    });
+    if (column === "XXX" || column === "YYY") {
+      return true;
+    }
+    column = "";
+  }
+  return false;
 }
