@@ -1,0 +1,33 @@
+@startuml placeTokenSequence
+start
+label init
+ :placeToken;
+if (isMovement) then (true)
+
+repeat
+    repeat
+        :readCoordinateOrigin;
+    repeat while (isValid) is (false)
+repeat while (isEmpty) is (true)
+:putEmptyToken;
+
+repeat
+    repeat
+:readCoordinateDestiny;
+    repeat while (isValid) is (false)
+repeat while (isEmpty) is (false)
+    :putToken;
+
+else (false)
+
+repeat
+    repeat
+:readCoordinateDestiny;
+    repeat while (isValid) is (false)
+repeat while (isEmpty) is (false)  
+    :putToken;
+
+endif
+
+stop
+@enduml

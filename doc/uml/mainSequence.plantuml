@@ -1,0 +1,12 @@
+@startuml mainSequence
+start
+repeat
+:initGame;
+repeat
+:showBoard;
+:placeToken;
+repeat while (isTicTacToe) is (false)
+repeat while (isResume) is (true)
+:endGame;
+stop
+@enduml

@@ -18,7 +18,6 @@ function playGame() {
     showBoard(game);
     placeToken(game);
     winner = isTicTacToe(game);
-    console.writeln(winner);
     if (!winner) nextTurn(game);
   } while (!winner);
 
