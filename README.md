@@ -1,14 +1,14 @@
 # TicTacToe V0.0
 
-#### Development of the popular game, composed of a 3x3 board and 3 tokens per player. 
-[WIKI](https://en.wikipedia.org/wiki/Tic-tac-toe)
+#### Development of the popular game, composed of a 3x3 board and 3 tokens per player. [WIKI](https://en.wikipedia.org/wiki/Tic-tac-toe)
 
 ![TicTacToe Board](./doc/img/board.png)
 
 Index
 
 - [Technologies](#technologies)
-- [Diagrams](#diagrams)
+- [Domain Model](#domain-model)
+    - [Vocabulary](#vocabulary)
     - [Main sequence](#main-sequence)
     - [Place token function](#place-token-function)
 - [Console View](#console-view)
@@ -18,7 +18,12 @@ Index
 - Javascript on functions
 - Views in console
 
-## Diagrams
+## Domain Model
+
+#### Vocabulary
+
+| ![Vocabulary](./doc/img/domain_model.png) |
+| ----------------------------------------- |
 
 #### Main sequence
 
@@ -31,7 +36,7 @@ Index
 | ---------------------------------------------- |
 
 <br>
-
 ## Console View
 
-![Console view](./doc/img/titactoewwinner.png)
+![Use cases](./doc/img/titactoewwinner.png)
+
