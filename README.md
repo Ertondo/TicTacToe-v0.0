@@ -22,7 +22,7 @@ Index
 
 #### Vocabulary
 
-| ![Vocabulary](./doc/img/domain_model.png) |
+| ![Vocabulary](./doc/img/test.png) |
 | ----------------------------------------- |
 
 #### Main sequence
